@@ -1,6 +1,20 @@
-# import boto3
+import boto3
 import json
 import time
+import os
+from botocore.config import Config
+
+def login():
+    time.sleep(5)
+    ACCESS_KEY=input("请输入AK：")
+    SECRET_KEY=input("请输入SK：")
+    SESSION_TOKEN=input("请输入token：")
+    session = boto3.Session(
+        aws_access_key_id=ACCESS_KEY,
+        aws_secret_access_key=SECRET_KEY,
+        aws_session_token=SESSION_TOKEN
+)
+
 
 def cloudwatch_resources():     #cloudwathc alarm
     cloudwatch = boto3.resource('cloudwatch')
@@ -15,28 +29,34 @@ def efs_resources():  #efs  target-mount efs
     efs_name = []
     efs = dict()
     Id = []
-    i = int(input("你有几个EFS："))
-    for f in range(0, i):
-        if i == 0 :
-            break
-        else:
-            efs_name.append(input("请输入efs的ID:"))
-            Id.append(i)
-            efs.update({efs_name[i]:Id[i]})
+    try:
+        i = int(input("你有几个EFS："))
+        for f in range(0, i):
+            if i == 0 :
+                break
+            else:
+                efs_name.append(input("请输入efs的ID:"))
+                Id.append(i)
+                efs.update({efs_name[i]:Id[i]})
+    except ValueError:
+        print("请输入整数")
     return efs
 
 def efs_targetmount_resources():  
     efs_target_name=[]
     efs_target=dict()
     Id=[]
-    i = int(input("你有几个EFS的tagert mount:"))
-    for f in range(0,i):
-        if i == 0:
-            break
-        else:
-            efs_target_name.append(input("请输入efs的挂在目标的ID"))
-            Id.append(f)
-            efs_target.update({efs_target_name[f]:Id[f]})
+    try:
+        i = int(input("你有几个EFS的tagert mount:"))
+        for f in range(0,i):
+            if i == 0:
+                break
+            else:
+                efs_target_name.append(input("请输入efs的挂在目标的ID"))
+                Id.append(f)
+                efs_target.update({efs_target_name[f]:Id[f]})
+    except ValueError:
+        print("请输入整数")
     return efs_target
 
 def delete_target(**target):
@@ -63,14 +83,17 @@ def ALB_resources():     # alb
     ALB = dict()
     arn = list()
     alb = []
-    i = int(input("你有几个ALB："))
-    for f in range(0, i):
-        if i == 0 :
-            break
-        else:
-            alb.append(input("请输入ARN："))
-            arn.append(f)
-            ALB.update({alb[f]:arn[f]})
+    try:
+        i = int(input("你有几个ALB："))
+        for f in range(0, i):
+            if i == 0 :
+                break
+            else:
+                alb.append(input("请输入ARN："))
+                arn.append(f)
+                ALB.update({alb[f]:arn[f]})
+    except ValueError:
+        print("请输入整数")
     return ALB
 
 def delte_AlB(**ARN):
@@ -88,14 +111,17 @@ def TG_resources():  #Tg
     arn = []
     TG = []
     tg=dict()
-    i = int(input("你有几个TG："))
-    for f in range(0, i):
-        if i == 0:
-            break
-        else:
-            arn.append(input("请输入TG的ARN："))
-            TG.append(i)
-            tg.update({arn[f]:TG[f]})
+    try:
+        i = int(input("你有几个TG："))
+        for f in range(0, i):
+            if i == 0:
+                break
+            else:
+                arn.append(input("请输入TG的ARN："))
+                TG.append(i)
+                tg.update({arn[f]:TG[f]})
+    except ValueError:
+        print("请输入整数")
     return tg
 
 def delete_TG(**tg):
@@ -219,15 +245,18 @@ def nat_gateway_resources():
     nats = {}
     nat = []
     value = []
-    num = int(input("请输入Nat网关的个数:"))
-    for i in range(0, num):
-        if num == 0:
-            break
-        else:
-            nat_name = input("请输入Nat网关的id：")
-            nat.append(nat_name)
-            value.append(i)
-            nats.update({nat[i]:value[i]})
+    try:
+        num = int(input("请输入Nat网关的个数:"))
+        for i in range(0, num):
+            if num == 0:
+                break
+            else:
+                nat_name = input("请输入Nat网关的id：")
+                nat.append(nat_name)
+                value.append(i)
+                nats.update({nat[i]:value[i]})
+    except ValueError:
+        print("请输入整数")
     return nats
 
 def delete_nat_gateway(**nats):
@@ -245,15 +274,18 @@ def EIP_resources(): #EIP
     eip = []
     EIP = {}
     Id = []
-    i = int(input("请输入有EIP的个数"))
-    for f in range(0, i):
-        if i == 0:
-            break
-        else:
-            name = input("请输入EIP的ID：")
-            eip.append(name)
-            Id.append(f)
-            EIP.update({eip[f]:Id[f]})
+    try:
+        i = int(input("请输入有EIP的个数"))
+        for f in range(0, i):
+            if i == 0:
+                break
+            else:
+                name = input("请输入EIP的ID：")
+                eip.append(name)
+                Id.append(f)
+                EIP.update({eip[f]:Id[f]})
+    except ValueError:
+        print("请输入正确个数")
     return EIP
 
 def delete_EIP(**eip):
@@ -271,15 +303,18 @@ def ASG_resources():  #auto_scaling
     asg = []
     ASG = {}
     Id = []
-    i = int(input("请输入你有几个ASG:"))
-    for f in range(0,i):
-        if i == 0:
-            break
-        else :
-            name = input("请输入ASG的Id")
-            asg.append(name)
-            Id.append(i)
-            ASG.update({asg[f]:Id[f]})
+    try:
+        i = int(input("请输入你有几个ASG:"))
+        for f in range(0,i):
+            if i == 0:
+                break
+            else :
+                name = input("请输入ASG的Id")
+                asg.append(name)
+                Id.append(i)
+                ASG.update({asg[f]:Id[f]})
+    except ValueError:
+        print("输入正确整数")
     return ASG
 
 def delete_ASG(**asg):
@@ -296,15 +331,18 @@ def ASG_configure():    #asg模板
     asg_configure = []
     ASG_configure = {}
     Id = []
-    i = int(input("请输入你有几个ASG_configure:"))
-    for f in range(0,i):
-        if i == 0:
-            break
-        else :
-            name = input("请输入ASG的Id")
-            asg_configure.append(name)
-            Id.append(i)
-            ASG_configure.update({asg_configure[f]:Id[f]})
+    try:
+        i = int(input("请输入你有几个ASG_configure:"))
+        for f in range(0,i):
+            if i == 0:
+                break
+            else :
+                name = input("请输入ASG的Id")
+                asg_configure.append(name)
+                Id.append(i)
+                ASG_configure.update({asg_configure[f]:Id[f]})
+    except ValueError:
+        print("请输入整数")
     return ASG_configure
 
 def delete_ASG_configure(**asg_configure):
@@ -326,39 +364,49 @@ def network_interfaces_resource():     #nat
         nats.append(nat.id)
     return nats
 '''''
-
-if __name__ == '__main__' :
-    delete_cloudwatch_resources() #删除警告
-    target = efs_targetmount_resources()#获得efs_target_mount资源
-    delete_target(**target) #删除efs_target_mount资源
-    name = efs_resources()#获得efs资源
-    delete_efs(**name) #删除efs
-    asg_configure = ASG_configure() #获得ASG模板
-    delete_ASG_configure(**asg_configure) #删除Asg模板
-    asg = ASG_resources() #获得ASG资源
-    delete_ASG(**asg)  #删除ASG
-    nats = nat_gateway_resources() #获得nat资源
-    delete_nat_gateway(**nats)   #删除nats
-    sleep(10)
-    eip = EIP_resources()#获得eip资源
-    delete_EIP(**eip)  #删除eip
-    ARN = ALB_resources() #获得ALB资源
-    delte_AlB(**ARN)         #删除ALB
-    sleep(10)
-    tg = TG_resources()#获得Tg资源
-    delete_TG(**tg) #删除Tg
-    subnet = subnets_resources() #获得子网资源
-    delete_subnets(*subnet) #删除子网
-    route_table = route_table_resources() #获得路由表资源
-    delete_route_table(*route_table) #删除路由表
-    igw = internet_gateways_resources() #获得igw资源
-    delete_internet_gateways(*igw) #删除igw
-    instance = instance_resources() #获得Instance资源
-    delete_launch_instance(*instance)#删除实例
-    vpc = VPC_resources() #获得vpc资源
-    delete_vpc(*vpc)#删除vpc资源
-    print("nuclear mission complete")
+def get_ecs_number():
     
 
+if __name__ == '__main__' :
+    
+    print("输入AKSK")
+    login()
+    time.sleep(20)
+    i = int(input("请输入是否执行脚本，1、是 2、否"))
+    if i==1 :
+        delete_cloudwatch_resources() #删除警告
+        target = efs_targetmount_resources()#获得efs_target_mount资源
+        delete_target(**target) #删除efs_target_mount资源
+        name = efs_resources()#获得efs资源
+        delete_efs(**name) #删除efs
+        asg_configure = ASG_configure() #获得ASG模板
+        delete_ASG_configure(**asg_configure) #删除Asg模板
+        asg = ASG_resources() #获得ASG资源
+        delete_ASG(**asg)  #删除ASG
+        nats = nat_gateway_resources() #获得nat资源
+        delete_nat_gateway(**nats)   #删除nats
+        time.sleep(10)
+        eip = EIP_resources()#获得eip资源
+        delete_EIP(**eip)  #删除eip
+        ARN = ALB_resources() #获得ALB资源
+        delte_AlB(**ARN)         #删除ALB
+        time.sleep(10)
+        tg = TG_resources()#获得Tg资源
+        delete_TG(**tg) #删除Tg
+        subnet = subnets_resources() #获得子网资源
+        delete_subnets(*subnet) #删除子网
+        route_table = route_table_resources() #获得路由表资源
+        delete_route_table(*route_table) #删除路由表
+        igw = internet_gateways_resources() #获得igw资源
+        delete_internet_gateways(*igw) #删除igw
+        instance = instance_resources() #获得Instance资源
+        delete_launch_instance(*instance)#删除实例
+        vpc = VPC_resources() #获得vpc资源
+        delete_vpc(*vpc)#删除vpc资源
+        print("nuclear mission complete")
+    else:
+        print("执行退出")
+    
+    
 
 
